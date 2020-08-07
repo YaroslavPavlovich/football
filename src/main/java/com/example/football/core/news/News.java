@@ -1,31 +1,28 @@
-package com.example.football.core.tournament;
+package com.example.football.core.news;
 
 import com.example.football.core.team.Team;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "fc_tournament")
-public class Tournament {
-
+@Table(name = "fc_news")
+public class News {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "tournament_name")
+    @Column(name = "name_news")
     private String name;
 
-    @Column(name = "country")
-    private String country;
+    @Column(name = "content_news")
+    private String content;
 
-    @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "fc_tournament_team",
-            joinColumns = { @JoinColumn(name = "id_tournament") },
+    @JoinTable(name = "fc_team_news",
+            joinColumns = { @JoinColumn(name = "id_news") },
             inverseJoinColumns = { @JoinColumn(name = "id_team") })
     private Set<Team> teams = new HashSet<Team>();
 
@@ -37,15 +34,11 @@ public class Tournament {
 
     public void setName(String name){this.name = name;}
 
-    public String getCountry(){return country;}
+    public String getContent(){return content;}
 
-    public void setCountry(String country){this.country = country;}
+    public void setContent(String content){this.content = content;}
 
-    public Set<Team> getTeams() {
-        return teams;
-    }
+    public Set<Team> getTeams(){return teams;}
 
-    public void setTeams(Set<Team> teams) {
-        this.teams = teams;
-    }
+    public void setTeams(Set<Team> teams) {this.teams = teams;}
 }

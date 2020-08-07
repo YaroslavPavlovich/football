@@ -1,30 +1,17 @@
 package com.example.football.core.tournament;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.football.core.tournament.web.request.TournamentCreateReq;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
-@Service
-public class TournamentService {
+public interface TournamentService {
+    Tournament findTournamentOrThrow(Long id);
 
-    @Autowired
-    private final TournamentRepo tournamentRepo;
-    private SessionFactory sessionFactory;
+    List<Tournament> findAllTournament();
 
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    Tournament create(Tournament req);
 
-    public TournamentService(final TournamentRepo tournamentRepo) {
-        this.tournamentRepo = tournamentRepo;
-    }
+    boolean delete(Long id);
 
-    public Tournament findTournamentOrThrow(Long id) {
-        return tournamentRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Tournament not found"));
-    }
+    boolean update(Tournament tournament, Tournament tournamentUpdate);
 }
