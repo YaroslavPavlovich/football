@@ -19,20 +19,20 @@ public class EventController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Event getEvent(@PathVariable Long id) {
-        return service.findEventOrThrow(id);
+    public EventView getEvent(@PathVariable Long id) {
+        return service.findEventViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Event> getAllEvent() {
+    public List<EventView> getAllEvent() {
         return service.findAllEvent();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Event create(@RequestBody Event req) {
+    public EventView create(@RequestBody Event req) {
         return service.create(req);
     }
 

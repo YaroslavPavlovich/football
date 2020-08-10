@@ -1,5 +1,7 @@
 package com.example.football.core.match;
 
+import com.example.football.core.match.web.MatchConverter;
+import com.example.football.core.match.web.MatchView;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -9,9 +11,12 @@ import java.util.List;
 public class MatchServiceImpl implements MatchService{
 
     private final MatchRepo matchRepo;
+    private final MatchConverter converter;
 
-    public MatchServiceImpl(MatchRepo matchRepo) {
+    public MatchServiceImpl(MatchRepo matchRepo,
+                            MatchConverter converter) {
         this.matchRepo = matchRepo;
+        this.converter = converter;
     }
 
     public Match findMatchOrThrow(Long id) {
@@ -22,12 +27,24 @@ public class MatchServiceImpl implements MatchService{
         return null;
     }
 
-    public List<Match> findAllMatch(){
-        return matchRepo.findAll();
+    @Override
+    public MatchView findMatchViewOrThrow(Long id) {
+        if(matchRepo.existsById(id)) {
+            Match match = matchRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Match not found"));
+            return converter.toView(match);
+        }
+        return null;
     }
 
-    public Match create(Match match) {
-        return matchRepo.save(match);
+    public List<MatchView> findAllMatch(){
+        List<Match> matches = matchRepo.findAll();
+        return converter.toViews(matches);
+    }
+
+    public MatchView create(Match match) {
+        Match matchSave = matchRepo.save(match);
+        return converter.toView(matchSave);
     }
 
     public boolean delete(Long id){

@@ -1,5 +1,6 @@
 package com.example.football.core.event;
 
+import com.example.football.core.event.web.EventView;
 import com.example.football.core.news.News;
 
 import java.util.List;
@@ -7,9 +8,11 @@ import java.util.List;
 public interface EventService {
     Event findEventOrThrow(Long id);
 
-    List<Event> findAllEvent();
+    EventView findEventViewOrThrow(Long id);
 
-    Event create(Event req);
+    List<EventView> findAllEvent();
+
+    EventView create(Event req);
 
     boolean delete(Long id);
 

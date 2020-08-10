@@ -20,20 +20,20 @@ public class ResultController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Result getResult(@PathVariable Long id) {
-        return service.findResultOrThrow(id);
+    public ResultView getResult(@PathVariable Long id) {
+        return service.findResultViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Result> getAllTournament() {
+    public List<ResultView> getAllTournament() {
         return service.findAllResult();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Result create(@RequestBody Result req) {
+    public ResultView create(@RequestBody Result req) {
         return service.create(req);
     }
 

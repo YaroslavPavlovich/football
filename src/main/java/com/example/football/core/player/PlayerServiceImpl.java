@@ -1,5 +1,7 @@
 package com.example.football.core.player;
 
+import com.example.football.core.player.web.PlayerConverter;
+import com.example.football.core.player.web.PlayerView;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -9,9 +11,12 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepo playerRepo;
+    private final PlayerConverter converter;
 
-    public PlayerServiceImpl(final PlayerRepo playerRepo) {
+    public PlayerServiceImpl(final PlayerRepo playerRepo,
+                             PlayerConverter converter) {
         this.playerRepo = playerRepo;
+        this.converter = converter;
     }
 
     @Override
@@ -24,13 +29,25 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<Player> findAllPlayer() {
-        return playerRepo.findAll();
+    public PlayerView findPlayerViewOrThrow(Long id) {
+        if(playerRepo.existsById(id)) {
+            Player player = playerRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Player not found"));
+            return converter.toView(player);
+        }
+        return null;
     }
 
     @Override
-    public Player create(Player player) {
-        return playerRepo.save(player);
+    public List<PlayerView> findAllPlayer() {
+        List<Player> players = playerRepo.findAll();
+        return converter.toViews(players);
+    }
+
+    @Override
+    public PlayerView create(Player player) {
+        Player playerSave = playerRepo.save(player);
+        return converter.toView(playerSave);
     }
 
     @Override

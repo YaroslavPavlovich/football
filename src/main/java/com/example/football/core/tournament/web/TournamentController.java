@@ -20,20 +20,20 @@ public class TournamentController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Tournament getTournament(@PathVariable Long id) {
-        return service.findTournamentOrThrow(id);
+    public TournamentView getTournament(@PathVariable Long id) {
+        return service.findTournamentViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Tournament> getAllTournament() {
+    public List<TournamentView> getAllTournament() {
         return service.findAllTournament();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Tournament create(@RequestBody Tournament req) {
+    public TournamentView create(@RequestBody Tournament req) {
         return service.create(req);
     }
 

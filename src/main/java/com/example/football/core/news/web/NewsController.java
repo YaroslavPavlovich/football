@@ -19,20 +19,20 @@ public class NewsController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public News getNews(@PathVariable Long id) {
-        return service.findNewsOrThrow(id);
+    public NewsView getNews(@PathVariable Long id) {
+        return service.findNewsViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<News> getAllNews() {
+    public List<NewsView> getAllNews() {
         return service.findAllNews();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public News create(@RequestBody News req) {
+    public NewsView create(@RequestBody News req) {
         return service.create(req);
     }
 

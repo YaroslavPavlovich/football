@@ -18,20 +18,20 @@ public class MatchController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Match getMatch(@PathVariable Long id) {
-        return service.findMatchOrThrow(id);
+    public MatchView getMatch(@PathVariable Long id) {
+        return service.findMatchViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Match> getAllMatch() {
+    public List<MatchView> getAllMatch() {
         return service.findAllMatch();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Match create(@RequestBody Match req) {
+    public MatchView create(@RequestBody Match req) {
         return service.create(req);
     }
 

@@ -18,20 +18,20 @@ public class CoachController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Coach getCoach(@PathVariable Long id) {
-        return service.findCoachOrThrow(id);
+    public CoachView getCoach(@PathVariable Long id) {
+        return service.findCoachViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Coach> getAllCoach() {
+    public List<CoachView> getAllCoach() {
         return service.findAllCoach();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Coach create(@RequestBody Coach req) {
+    public CoachView create(@RequestBody Coach req) {
         return service.create(req);
     }
 

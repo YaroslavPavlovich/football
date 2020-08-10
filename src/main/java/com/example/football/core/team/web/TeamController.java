@@ -18,20 +18,20 @@ import java.util.List;
 
         @GetMapping("/{id}")
         @ResponseBody
-        public Team getTeam(@PathVariable Long id) {
-            return service.findTeamOrThrow(id);
+        public TeamView getTeam(@PathVariable Long id) {
+            return service.findTeamViewOrThrow(id);
         }
 
         @GetMapping
         @ResponseBody
-        public List<Team> getAllTeam() {
+        public List<TeamView> getAllTeam() {
             return service.findAllTeam();
         }
 
         @PostMapping
         @ResponseStatus(HttpStatus.CREATED)
         @ResponseBody
-        public Team create(@RequestBody Team req) {
+        public TeamView create(@RequestBody Team req) {
             return service.create(req);
         }
 

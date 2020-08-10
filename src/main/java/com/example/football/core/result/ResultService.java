@@ -1,13 +1,17 @@
 package com.example.football.core.result;
 
+import com.example.football.core.result.web.ResultView;
+
 import java.util.List;
 
 public interface ResultService {
     Result findResultOrThrow(Long id);
 
-    List<Result> findAllResult();
+    ResultView findResultViewOrThrow(Long id);
 
-    Result create(Result req);
+    List<ResultView> findAllResult();
+
+    ResultView create(Result req);
 
     boolean delete(Long id);
 

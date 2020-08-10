@@ -1,5 +1,7 @@
 package com.example.football.core.event;
 
+import com.example.football.core.event.web.EventConverter;
+import com.example.football.core.event.web.EventView;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -9,9 +11,12 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepo eventRepo;
+    private final EventConverter converter;
 
-    public EventServiceImpl(final EventRepo eventRepo) {
+    public EventServiceImpl(final EventRepo eventRepo,
+                            EventConverter converter) {
         this.eventRepo = eventRepo;
+        this.converter = converter;
     }
 
 
@@ -25,13 +30,25 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findAllEvent() {
-        return eventRepo.findAll();
+    public EventView findEventViewOrThrow(Long id) {
+        if(eventRepo.existsById(id)) {
+            Event event = eventRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Events not found"));
+            return converter.toView(event);
+        }
+        return null;
     }
 
     @Override
-    public Event create(Event event) {
-        return eventRepo.save(event);
+    public List<EventView> findAllEvent() {
+        List<Event> events = eventRepo.findAll();
+        return converter.toViews(events);
+    }
+
+    @Override
+    public EventView create(Event event) {
+        Event eventSave = eventRepo.save(event);
+        return converter.toView(eventSave);
     }
 
     @Override

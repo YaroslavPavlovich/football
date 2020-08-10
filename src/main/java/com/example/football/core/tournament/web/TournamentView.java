@@ -1,9 +1,15 @@
 package com.example.football.core.tournament.web;
 
-public class TournamentView {
+import com.example.football.core.team.web.TeamView;
+
+import java.io.Serializable;
+import java.util.Set;
+
+public class TournamentView implements Serializable {
     private Long id;
     private String name;
     private String country;
+    private Set<TeamView> teams;
 
     public long getId(){return id;}
 
@@ -16,4 +22,8 @@ public class TournamentView {
     public String getCountry(){return country;}
 
     public void setCountry(String country){this.country = country;}
+
+    public Set<TeamView> getTeams(){return teams;}
+
+    public void setTeams(Set<TeamView> teams){this.teams = teams;}
 }

@@ -1,13 +1,17 @@
 package com.example.football.core.news;
 
+import com.example.football.core.news.web.NewsView;
+
 import java.util.List;
 
 public interface NewsService {
     News findNewsOrThrow(Long id);
 
-    List<News> findAllNews();
+    NewsView findNewsViewOrThrow(Long id);
 
-    News create(News req);
+    List<NewsView> findAllNews();
+
+    NewsView create(News req);
 
     boolean delete(Long id);
 

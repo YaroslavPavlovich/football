@@ -1,6 +1,7 @@
 package com.example.football.core.news;
 
-import com.example.football.core.news.NewsRepo;
+import com.example.football.core.news.web.NewsConverter;
+import com.example.football.core.news.web.NewsView;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -10,9 +11,11 @@ import java.util.List;
 public class NewsServiceImpl implements NewsService {
 
     private final NewsRepo newsRepo;
+    private final NewsConverter converter;
 
-    public NewsServiceImpl(final NewsRepo newsRepo) {
+    public NewsServiceImpl(final NewsRepo newsRepo, NewsConverter converter) {
         this.newsRepo = newsRepo;
+        this.converter = converter;
     }
 
     @Override
@@ -25,13 +28,25 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> findAllNews() {
-        return newsRepo.findAll();
+    public NewsView findNewsViewOrThrow(Long id) {
+        if(newsRepo.existsById(id)) {
+            News news = newsRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("News not found"));
+            return converter.toView(news);
+        }
+        return null;
     }
 
     @Override
-    public News create(News news) {
-        return newsRepo.save(news);
+    public List<NewsView> findAllNews() {
+        List<News> news = newsRepo.findAll();
+        return converter.toViews(news);
+    }
+
+    @Override
+    public NewsView create(News news) {
+        News newsSave = newsRepo.save(news);
+        return converter.toView(newsSave);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.football.core.result;
 
-import com.example.football.core.tournament.TournamentRepo;
+import com.example.football.core.result.web.ResultConverter;
+import com.example.football.core.result.web.ResultView;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -10,9 +11,12 @@ import java.util.List;
 public class ResultServiceImpl implements ResultService{
 
     private final ResultRepo resultRepo;
+    private final ResultConverter converter;
 
-    public ResultServiceImpl(final ResultRepo resultRepo) {
+    public ResultServiceImpl(final ResultRepo resultRepo,
+                             ResultConverter converter) {
         this.resultRepo = resultRepo;
+        this.converter = converter;
     }
 
     @Override
@@ -25,13 +29,25 @@ public class ResultServiceImpl implements ResultService{
     }
 
     @Override
-    public List<Result> findAllResult() {
-        return resultRepo.findAll();
+    public ResultView findResultViewOrThrow(Long id) {
+        if(resultRepo.existsById(id)) {
+            Result result = resultRepo.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Result not found"));
+            return converter.toView(result);
+        }
+        return null;
     }
 
     @Override
-    public Result create(Result result) {
-        return resultRepo.save(result);
+    public List<ResultView> findAllResult() {
+        List<Result> results = resultRepo.findAll();
+        return converter.toViews(results);
+    }
+
+    @Override
+    public ResultView create(Result result) {
+        Result resultSave = resultRepo.save(result);
+        return converter.toView(resultSave);
     }
 
     @Override

@@ -22,8 +22,6 @@ public class Team {
         @Column(name = "players")
         private int numPlayers;
 
-        @OneToOne(mappedBy = "passport")
-
         public long getId(){return id;}
 
         public void setId(Long id){this.id = id;}

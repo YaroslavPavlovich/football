@@ -1,42 +1,24 @@
-package com.example.football.core.player;
+package com.example.football.core.player.web;
 
-import com.example.football.core.team.Team;
+import com.example.football.core.team.web.TeamView;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "fc_player")
-public class Player {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PlayerView {
     private long id;
 
-    @Column(name = "surname_player")
     private String surname;
 
-    @Column(name = "name_player")
     private String name;
 
-    @Column(name = "height")
     private int height;
 
-    @Column(name = "weight")
     private int weight;
 
-    @Column(name = "age")
     private int age;
 
-    @NotEmpty
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "fc_player_team",
-            joinColumns = { @JoinColumn(name = "id_player") },
-            inverseJoinColumns = { @JoinColumn(name = "id_team") })
-    private Set<Team> teams = new HashSet<Team>();
+    private Set<TeamView> teams = new HashSet<TeamView>();
 
     public long getId(){return id;}
 
@@ -62,11 +44,11 @@ public class Player {
 
     public void setAge(int age){this.age = age;}
 
-    public Set<Team> getTeams() {
+    public Set<TeamView> getTeams() {
         return teams;
     }
 
-    public void setTeams(Set<Team> teams) {
+    public void setTeams(Set<TeamView> teams) {
         this.teams = teams;
     }
 }

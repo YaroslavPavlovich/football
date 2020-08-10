@@ -20,20 +20,20 @@ public class PlayerController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Player getPlayer(@PathVariable Long id) {
-        return service.findPlayerOrThrow(id);
+    public PlayerView getPlayer(@PathVariable Long id) {
+        return service.findPlayerViewOrThrow(id);
     }
 
     @GetMapping
     @ResponseBody
-    public List<Player> getAllPlayer() {
+    public List<PlayerView> getAllPlayer() {
         return service.findAllPlayer();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Player create(@RequestBody Player req) {
+    public PlayerView create(@RequestBody Player req) {
         return service.create(req);
     }
 

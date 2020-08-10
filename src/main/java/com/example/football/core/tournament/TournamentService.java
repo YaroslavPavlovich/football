@@ -1,15 +1,18 @@
 package com.example.football.core.tournament;
 
+import com.example.football.core.tournament.web.TournamentView;
 import com.example.football.core.tournament.web.request.TournamentCreateReq;
 
 import java.util.List;
 
 public interface TournamentService {
+    TournamentView findTournamentViewOrThrow(Long id);
+
     Tournament findTournamentOrThrow(Long id);
 
-    List<Tournament> findAllTournament();
+    List<TournamentView> findAllTournament();
 
-    Tournament create(Tournament req);
+    TournamentView create(Tournament req);
 
     boolean delete(Long id);
 

@@ -1,13 +1,17 @@
 package com.example.football.core.player;
 
+import com.example.football.core.player.web.PlayerView;
+
 import java.util.List;
 
 public interface PlayerService {
     Player findPlayerOrThrow(Long id);
 
-    List<Player> findAllPlayer();
+    PlayerView findPlayerViewOrThrow(Long id);
 
-    Player create(Player req);
+    List<PlayerView> findAllPlayer();
+
+    PlayerView create(Player req);
 
     boolean delete(Long id);
 

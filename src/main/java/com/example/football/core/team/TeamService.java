@@ -1,13 +1,17 @@
 package com.example.football.core.team;
 
+import com.example.football.core.team.web.TeamView;
+
 import java.util.List;
 
 public interface TeamService {
+    TeamView findTeamViewOrThrow(Long id);
+
     Team findTeamOrThrow(Long id);
 
-    List<Team> findAllTeam();
+    List<TeamView> findAllTeam();
 
-    Team create(Team req);
+    TeamView create(Team req);
 
     boolean delete(Long id);
 
