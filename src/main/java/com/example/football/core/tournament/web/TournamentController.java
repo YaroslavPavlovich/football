@@ -2,12 +2,16 @@ package com.example.football.core.tournament.web;
 
 import com.example.football.core.tournament.Tournament;
 import com.example.football.core.tournament.TournamentService;
-import com.example.football.core.tournament.web.request.TournamentCreateReq;
+import com.example.football.core.tournament.web.request.TournamentBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tournament")
@@ -26,14 +30,14 @@ public class TournamentController {
 
     @GetMapping
     @ResponseBody
-    public List<TournamentView> getAllTournament() {
-        return service.findAllTournament();
+    public Page<TournamentView> getAllTournament(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllTournament(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public TournamentView create(@RequestBody Tournament req) {
+    public TournamentView create(@RequestBody @Valid TournamentBaseReq req) {
         return service.create(req);
     }
 
@@ -43,8 +47,9 @@ public class TournamentController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateTournament(@PathVariable(name = "id") Long id, @RequestBody Tournament tournament){
-        Tournament tournamentUpdate = service.findTournamentOrThrow(id);
-        return service.update(tournament, tournamentUpdate);
+    public TournamentView updateTournament(@PathVariable(name = "id") Long id,
+                                    @RequestBody @Valid TournamentBaseReq req){
+        Tournament tournament = service.findTournamentOrThrow(id);
+        return service.update(tournament, req);
     }
 }

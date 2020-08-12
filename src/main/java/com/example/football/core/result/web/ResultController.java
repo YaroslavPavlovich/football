@@ -2,10 +2,15 @@ package com.example.football.core.result.web;
 
 import com.example.football.core.result.Result;
 import com.example.football.core.result.ResultService;
-import com.example.football.core.tournament.Tournament;
+import com.example.football.core.result.web.request.ResultBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,14 +31,14 @@ public class ResultController {
 
     @GetMapping
     @ResponseBody
-    public List<ResultView> getAllTournament() {
-        return service.findAllResult();
+    public Page<ResultView> getAllResult(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        return service.findAllResult(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResultView create(@RequestBody Result req) {
+    public ResultView create(@RequestBody @Valid ResultBaseReq req) {
         return service.create(req);
     }
 
@@ -43,8 +48,9 @@ public class ResultController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateResult(@PathVariable(name = "id") Long id, @RequestBody Result result){
-        Result resultUpdate = service.findResultOrThrow(id);
-        return service.update(result, resultUpdate);
+    public ResultView updateResult(@PathVariable(name = "id") Long id,
+                                @RequestBody @Valid ResultBaseReq req){
+        Result result = service.findResultOrThrow(id);
+        return service.update(result, req);
     }
 }

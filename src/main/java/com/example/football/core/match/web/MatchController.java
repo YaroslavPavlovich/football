@@ -2,9 +2,16 @@ package com.example.football.core.match.web;
 
 import com.example.football.core.match.Match;
 import com.example.football.core.match.MatchService;
+import com.example.football.core.match.web.request.MatchBaseReq;
+import com.example.football.core.match.web.request.MatchLastReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,6 +23,12 @@ public class MatchController {
         this.service = service;
     }
 
+    @GetMapping("/last")
+    @ResponseBody
+    public List<MatchView> getLast(@RequestBody MatchLastReq req){
+        return service.findLastMatch(req);
+    }
+
     @GetMapping("/{id}")
     @ResponseBody
     public MatchView getMatch(@PathVariable Long id) {
@@ -24,14 +37,14 @@ public class MatchController {
 
     @GetMapping
     @ResponseBody
-    public List<MatchView> getAllMatch() {
-        return service.findAllMatch();
+    public Page<MatchView> getAllMatch(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllMatch(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public MatchView create(@RequestBody Match req) {
+    public MatchView create(@RequestBody @Valid MatchBaseReq req) {
         return service.create(req);
     }
 
@@ -41,8 +54,9 @@ public class MatchController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateTournament(@PathVariable(name = "id") Long id, @RequestBody Match match) {
-        Match matchUpdate = service.findMatchOrThrow(id);
-        return service.update(match, matchUpdate);
+    public MatchView updateTournament(@PathVariable(name = "id") Long id,
+                                      @RequestBody @Valid MatchBaseReq req) {
+        Match match = service.findMatchOrThrow(id);
+        return service.update(match, req);
     }
 }

@@ -2,9 +2,15 @@ package com.example.football.core.coach.web;
 
 import com.example.football.core.coach.Coach;
 import com.example.football.core.coach.CoachService;
+import com.example.football.core.coach.web.request.CoachBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,14 +30,14 @@ public class CoachController {
 
     @GetMapping
     @ResponseBody
-    public List<CoachView> getAllCoach() {
-        return service.findAllCoach();
+    public Page<CoachView> getAllCoach(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllCoach(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public CoachView create(@RequestBody Coach req) {
+    public CoachView create(@RequestBody @Valid CoachBaseReq req) {
         return service.create(req);
     }
 
@@ -41,8 +47,9 @@ public class CoachController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateCoach(@PathVariable(name = "id") Long id, @RequestBody Coach coach) {
-        Coach coachUpdate = service.findCoachOrThrow(id);
-        return service.update(coach, coachUpdate);
+    public CoachView updateCoach(@PathVariable(name = "id") Long id,
+                               @RequestBody @Valid CoachBaseReq req) {
+        Coach coach = service.findCoachOrThrow(id);
+        return service.update(coach, req);
     }
 }

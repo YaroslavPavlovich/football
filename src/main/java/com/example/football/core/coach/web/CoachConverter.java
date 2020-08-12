@@ -1,6 +1,7 @@
 package com.example.football.core.coach.web;
 
 import com.example.football.core.coach.Coach;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class CoachConverter {
         return toView.convert(coach);
     }
 
-    public List<CoachView> toViews(List<Coach> coaches) {
+    public List<CoachView> toViews(Page<Coach> coachesPage) {
         List<CoachView> views = new ArrayList<CoachView>();
+        List<Coach> coaches = coachesPage.getContent();
         coaches.forEach(coach -> views.add(toView(coach)));
         return views;
     }

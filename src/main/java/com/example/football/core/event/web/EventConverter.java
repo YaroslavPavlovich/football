@@ -1,6 +1,7 @@
 package com.example.football.core.event.web;
 
 import com.example.football.core.event.Event;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class EventConverter {
         return toView.convert(event);
     }
 
-    public List<EventView> toViews(List<Event> events) {
+    public List<EventView> toViews(Page<Event> eventsPage) {
         List<EventView> views = new ArrayList<EventView>();
+        List<Event> events = eventsPage.getContent();
         events.forEach(event -> views.add(toView(event)));
         return views;
     }

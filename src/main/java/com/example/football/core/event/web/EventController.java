@@ -2,10 +2,15 @@ package com.example.football.core.event.web;
 
 import com.example.football.core.event.Event;
 import com.example.football.core.event.EventService;
-import com.example.football.core.news.News;
+import com.example.football.core.event.web.request.EventBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,14 +30,14 @@ public class EventController {
 
     @GetMapping
     @ResponseBody
-    public List<EventView> getAllEvent() {
-        return service.findAllEvent();
+    public Page<EventView> getAllEvent(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllEvent(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public EventView create(@RequestBody Event req) {
+    public EventView create(@RequestBody @Valid EventBaseReq req) {
         return service.create(req);
     }
 
@@ -42,8 +47,9 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateEvent(@PathVariable(name = "id") Long id, @RequestBody Event event){
-        Event eventUpdate = service.findEventOrThrow(id);
-        return service.update(event, eventUpdate);
+    public EventView updateEvent(@PathVariable(name = "id") Long id,
+                                 @RequestBody @Valid EventBaseReq req){
+        Event event = service.findEventOrThrow(id);
+        return service.update(event, req);
     }
 }

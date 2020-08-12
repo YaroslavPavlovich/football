@@ -8,7 +8,4 @@ import org.springframework.lang.NonNull;
 import java.util.Optional;
 
 public interface TeamRepo extends JpaRepository<Team, Long> {
-
-    @Override
-    Optional<Team> findById(@NonNull Long id);
 }

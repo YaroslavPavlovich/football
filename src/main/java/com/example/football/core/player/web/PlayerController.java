@@ -2,10 +2,15 @@ package com.example.football.core.player.web;
 
 import com.example.football.core.player.Player;
 import com.example.football.core.player.PlayerService;
-import com.example.football.core.tournament.Tournament;
+import com.example.football.core.player.web.request.PlayerBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,14 +31,14 @@ public class PlayerController {
 
     @GetMapping
     @ResponseBody
-    public List<PlayerView> getAllPlayer() {
-        return service.findAllPlayer();
+    public Page<PlayerView> getAllPlayer(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllPlayer(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public PlayerView create(@RequestBody Player req) {
+    public PlayerView create(@RequestBody @Valid PlayerBaseReq req) {
         return service.create(req);
     }
 
@@ -43,8 +48,9 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
-    public boolean updatePlayer(@PathVariable(name = "id") Long id, @RequestBody Player player){
-        Player playerUpdate = service.findPlayerOrThrow(id);
-        return service.update(player, playerUpdate);
+    public PlayerView updatePlayer(@PathVariable(name = "id") Long id,
+                                @RequestBody @Valid PlayerBaseReq req){
+        Player player = service.findPlayerOrThrow(id);
+        return service.update(player, req);
     }
 }

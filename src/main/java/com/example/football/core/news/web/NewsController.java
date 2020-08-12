@@ -2,10 +2,15 @@ package com.example.football.core.news.web;
 
 import com.example.football.core.news.News;
 import com.example.football.core.news.NewsService;
-import com.example.football.core.tournament.Tournament;
+import com.example.football.core.news.web.request.NewsBaseReq;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,14 +30,14 @@ public class NewsController {
 
     @GetMapping
     @ResponseBody
-    public List<NewsView> getAllNews() {
-        return service.findAllNews();
+    public Page<NewsView> getAllNews(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return service.findAllNews(pageable);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public NewsView create(@RequestBody News req) {
+    public NewsView create(@RequestBody @Valid NewsBaseReq req) {
         return service.create(req);
     }
 
@@ -42,8 +47,9 @@ public class NewsController {
     }
 
     @PutMapping("/{id}")
-    public boolean updateNews(@PathVariable(name = "id") Long id, @RequestBody News news){
-        News newsUpdate = service.findNewsOrThrow(id);
-        return service.update(news, newsUpdate);
+    public NewsView updateNews(@PathVariable(name = "id") Long id,
+                              @RequestBody @Valid NewsBaseReq req){
+        News news = service.findNewsOrThrow(id);
+        return service.update(news, req);
     }
 }
